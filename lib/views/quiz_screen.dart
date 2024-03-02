@@ -239,7 +239,6 @@ class _QuizScreenState extends State<QuizScreen> {
                                               }
                                             },
                                             child: Container(
-                                              height: 45,
                                               padding: const EdgeInsets.all(10),
                                               margin:
                                                   const EdgeInsets.symmetric(
@@ -257,10 +256,15 @@ class _QuizScreenState extends State<QuizScreen> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text(
-                                                    "$letters ${questionOption.text}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16),
+                                                  Expanded(
+                                                    child: Text(
+                                                      "$letters ${questionOption.text}",
+                                                      maxLines: 5,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                          fontSize: 16),
+                                                    ),
                                                   ),
                                                   isLocked == true
                                                       ? questionOption.isCorrect
