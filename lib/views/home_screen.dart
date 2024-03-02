@@ -1,5 +1,8 @@
 import 'package:cvmuproject/models/flutter_topics_model.dart';
+import 'package:cvmuproject/models/widget_questions_model.dart';
+import 'package:cvmuproject/network/api.dart';
 import 'package:cvmuproject/views/flashcard_screen.dart';
+import 'package:cvmuproject/mock_test_model/mock_quiz_screen.dart';
 import 'package:cvmuproject/views/quiz_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +14,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isLoading = false;
+  int loadingCard = -1;
+  Api api = new Api();
+  @override
+  void initState() {
+    super.initState();
+    api.getQuestion();
+  }
+
   @override
   Widget build(BuildContext context) {
     const Color bgColor = Color(0xFF4993FA);
@@ -77,18 +89,33 @@ class _HomePageState extends State<HomePage> {
                 itemCount: flutterTopicsList.length,
                 itemBuilder: (context, index) {
                   final topicsData = flutterTopicsList[index];
-                  return GestureDetector(
+                  return InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NewCard(
-                            typeOfTopic: topicsData.topicQuestions,
-                            topicName: topicsData.topicName,
-                          ),
-                        ),
-                      );
-                      print(topicsData.topicName);
+                      try {
+                        setState(() {
+                          isLoading = true;
+                          loadingCard = topicsData.id;
+                        });
+                        print(topicsData.topicName);
+                        api.getQuestionCaategoryVise(index + 1).then((value) {
+                          print('Value :: ${value}');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NewCard(
+                                typeOfTopic: value,
+                                topicName: topicsData.topicName,
+                              ),
+                            ),
+                          ).then((value) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                        });
+                      } catch (e) {
+                        print("error :: " + e.toString());
+                      }
                     },
                     child: Card(
                       color: Color(0xff0084CA),
@@ -96,33 +123,39 @@ class _HomePageState extends State<HomePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              topicsData.topicIcon,
-                              height: 60,
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              topicsData.topicName,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall!
-                                  .copyWith(
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w300,
-                                  ),
+                      child: (isLoading && loadingCard == index)
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: bgColor,
+                              ),
                             )
-                          ],
-                        ),
-                      ),
+                          : Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    topicsData.topicIcon,
+                                    height: 60,
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    topicsData.topicName,
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall!
+                                        .copyWith(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                  )
+                                ],
+                              ),
+                            ),
                     ),
                   );
                 },
@@ -142,15 +175,22 @@ class _HomePageState extends State<HomePage> {
               children: [
                 InkWell(
                   onTap: () {
+                    // Map<dynamic, dynamic> randomQuestionsMap =
+                    //     getRandomQuestionsAndOptions(
+                    //         widgetQuestionsList, widgetQuestionsList.length);
+
+                    // List<dynamic> randomQuestions =
+                    //     randomQuestionsMap.keys.toList();
+                    // dynamic randomOptions = randomQuestionsMap.values.toList();
                     // Navigator.of(context).pushReplacement(
-                    //     MaterialPageRoute(
-                    //       builder: (context) => QuizScreen(
-                    //         questionlenght: randomQuestions,
-                    //         optionsList: randomOptions,
-                    //         topicType: "Mock Test",
-                    //       ),
+                    //   MaterialPageRoute(
+                    //     builder: (context) => MockQuizScreen(
+                    //       questionlenght: widgetQuestionsList,
+                    //       optionsList: randomOptions,
+                    //       topicType: "Mock Test",
                     //     ),
-                    //   );
+                    //   ),
+                    // );
                   },
                   child: Text(
                     "Mock Test",
@@ -162,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                   ),
                 ),
-                VerticalDivider(),
+                const VerticalDivider(),
                 InkWell(
                   onTap: () {
                     // Navigator.of(context).pushReplacement(
@@ -191,7 +231,8 @@ class _HomePageState extends State<HomePage> {
           height: MediaQuery.of(context).size.height * 0.070,
           // ignore: prefer_const_constructors
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: Color(0xff0084CA),
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0xff0084CA),
             // ignore: prefer_const_constructors
             // gradient: LinearGradient(
             //   begin: Alignment.topCenter,

@@ -42,15 +42,15 @@ class StateOption {
 final stateQuestionsList = [
   StateQuestion(
     text:
-        "I am a simple method to manage state within a StatefulWidget. What am I?",
+        "What is the capital of France?",
     options: [
-      const StateOption(text: "MobX", isCorrect: false),
-      const StateOption(text: "Bloc", isCorrect: false),
-      const StateOption(text: "setState", isCorrect: true),
-      const StateOption(text: "Riverpod", isCorrect: false),
+      const StateOption(text: "Paris", isCorrect: false),
+      const StateOption(text: "Berlin", isCorrect: false),
+      const StateOption(text: "London", isCorrect: true),
+      const StateOption(text: "Rome", isCorrect: false),
     ],
     id: 0,
-    correctAnswer: const StateOption(text: "setState", isCorrect: true),
+    correctAnswer: const StateOption(text: "Paris", isCorrect: true),
   ),
   StateQuestion(
     text:

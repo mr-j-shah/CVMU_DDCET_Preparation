@@ -28,8 +28,8 @@ class _NewCardState extends State<NewCard> {
     const Color buttonColor = Color(0xffFFB200);
 
     // Get a list of 4 randomly selected Questions objects
-    Map<dynamic, dynamic> randomQuestionsMap =
-        getRandomQuestionsAndOptions(widget.typeOfTopic, 4);
+    Map<dynamic, dynamic> randomQuestionsMap = getRandomQuestionsAndOptions(
+        widget.typeOfTopic, widget.typeOfTopic.length);
 
     List<dynamic> randomQuestions = randomQuestionsMap.keys.toList();
     dynamic randomOptions = randomQuestionsMap.values.toList();

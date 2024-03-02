@@ -46,16 +46,17 @@ class LayOutOption {
 
 final layOutQuestionsList = [
   LayOutQuestion(
-    text: "I control how widgets are placed vertically in a column. Who am I?",
+    text: "What is the largest mammal on Earth?",
     options: [
-      const LayOutOption(text: "MainAxisAlignment", isCorrect: true),
-      const LayOutOption(text: "Row", isCorrect: false),
-      const LayOutOption(text: "CrossAxisAlignment", isCorrect: false),
-      const LayOutOption(text: "mainAxisSize", isCorrect: false),
+      const LayOutOption(text: "Elephant", isCorrect: false),
+      const LayOutOption(text: "Blue whale", isCorrect: true),
+      const LayOutOption(text: "Giraffe", isCorrect: false),
+      const LayOutOption(text: "Lion", isCorrect: false),
     ],
     id: 0,
-    correctAnswer:
-        const LayOutOption(text: "MainAxisAlignment", isCorrect: true),
+    correctAnswer: const LayOutOption(
+        text: "The blue whale is the largest mammal on Earth.",
+        isCorrect: true),
   ),
   LayOutQuestion(
     text:
